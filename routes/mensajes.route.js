@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const { nuevoSMS, nuevoEmail } = require("../controllers/mensaje.controller");
+const { nuevoSMS, nuevoEmailEstimacion, nuevoEmailCotizacion } = require("../controllers/mensaje.controller");
 
 const router = Router();
 
@@ -8,6 +8,9 @@ const router = Router();
 router.post("/sms", nuevoSMS);
 
 //para enviar correos
-router.post("/email", nuevoEmail);
+router.post("/email/cotizacion", nuevoEmailCotizacion);
+
+//para enviar correos
+router.post("/email/estimacion", nuevoEmailEstimacion);
 
 module.exports = router;

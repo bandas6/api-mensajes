@@ -1,37 +1,31 @@
+const postmarkTransport = require('nodemailer-postmark-transport');
 const nodemailer = require('nodemailer');
-const { crearHtmlParaCorreo } = require('../utils/templates');
+
+const { crearHtmlParaCorreoCotizacion, crearHtmlParaCorreoEstimacion } = require('../utils/templates');
 
 
-const createTrans = () => {
-
-  const transport = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
-    auth: {
-      user: process.env.NODEMAILUSER,
-      pass: process.env.NODEMAILPASS
-    }
-  });
-
-  return transport;
-
-}
-
-const sendMail = async (body) => {
+const sendMailCotizacion = async (body) => {
 
   console.log('Enviando mensaje por correo');
-  
+
   const { nom, courriel, telefono, sujec, message } = body;
 
   try {
-   
-    const transport = createTrans();
+
+    const transport = nodemailer.createTransport(
+      postmarkTransport({
+        auth: {
+          apiKey: process.env.POSTMARKKEY // Reemplaza 'tu_api_key' con tu API key de Postmark
+        }
+      })
+    );
+
     const info = await transport.sendMail({
-      from: 'Transportzz2024@hotmail.com', // sender address
-      to: courriel, // list of receivers array
+      from: 'demenagement@transportdoublez.com', // sender address
+      to: 'demenagement@transportdoublez.com', // list of receivers array
       subject: nom + ' a solicitado sus servicios!!', // Subject line
       text: sujec, // plain text body
-      html: crearHtmlParaCorreo(nom, message, courriel, telefono) // html body
+      html: crearHtmlParaCorreoCotizacion(nom, message, courriel, telefono) // html body
     });
 
     console.log("Message sent: %s", info.messageId);
@@ -39,6 +33,47 @@ const sendMail = async (body) => {
     return true
 
   } catch (error) {
+
+    console.error('Error al enviar mensajae por correo:', error);
+    return false; // Retorna false indicando que hubo un error al enviar el mensaje
+  }
+
+}
+
+const sendMailEstimacion = async (body) => {
+
+  console.log('Enviando mensaje por correo');
+
+  const { date, name, tel, cell, email, street, city, postalCode, province, numRooms, floor, elevator, refrigerator,
+    stove, washer, dryer, dishwasher, divanTwoPlace, divanthreePlace, bureau, table, lit, armoire, others, numberBoxes,
+    comments, streetNumber, would, codePostal, provinceArrival, numberPieces, floorArrival, elevatorArrival } = body;
+
+  try {
+
+    const transport = nodemailer.createTransport(
+      postmarkTransport({
+        auth: {
+          apiKey: process.env.POSTMARKKEY // Reemplaza 'tu_api_key' con tu API key de Postmark
+        }
+      })
+    );
+
+    const info = await transport.sendMail({
+      from: 'demenagement@transportdoublez.com', // sender address
+      to: 'demenagement@transportdoublez.com', // list of receivers array
+      subject: name + ' a solicitado sus servicios!!', // Subject line
+      text: email, // plain text body
+      html: crearHtmlParaCorreoEstimacion(date, name, tel, cell, email, street, city, postalCode, province, numRooms, floor, elevator, refrigerator,
+        stove, washer, dryer, dishwasher, divanTwoPlace, divanthreePlace, bureau, table, lit, armoire, others, numberBoxes,
+        comments, streetNumber, would, codePostal, provinceArrival, numberPieces, floorArrival, elevatorArrival) // html body
+    });
+
+    console.log("Message sent: %s", info.messageId);
+
+    return true
+
+  } catch (error) {
+
     console.error('Error al enviar mensajae por correo:', error);
     return false; // Retorna false indicando que hubo un error al enviar el mensaje
   }
@@ -46,5 +81,6 @@ const sendMail = async (body) => {
 }
 
 module.exports = {
-  sendMail
+  sendMailCotizacion,
+  sendMailEstimacion
 }  

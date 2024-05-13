@@ -10,11 +10,11 @@ const createSMS = async (body) => {
     const { nom, courriel, telefono, sujec, message } = body;
 
     try {
-        const messageToSend = `Nombre: ${nom}\nCorreo electrónico: ${courriel}\nTeléfono: ${telefono}\nAsunto: ${sujec}\nMensaje: ${message}`;
+        const messageToSend = `Nueva Solicitud de mudanza\n Nombre: ${nom}\nCorreo electrónico: ${courriel}\nTeléfono: ${telefono}\nAsunto: ${sujec}\nMensaje: ${message}`;
 
         const messageResp = await client.messages.create({
             body: messageToSend,
-            to: telefono,
+            to: '+1' + telefono,
             from: '+13342768635',
         });
 
@@ -23,6 +23,7 @@ const createSMS = async (body) => {
 
     } catch (error) {
         console.error('Error al enviar el mensaje:', error);
+        throw new Error('Error al enviar el mensaje:', error)
         return false; // Retorna false indicando que hubo un error al enviar el mensaje
     }
 };

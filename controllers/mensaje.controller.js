@@ -1,6 +1,6 @@
 const { request, response } = require("express");
 const createSMS = require("../helpers/createSMS");
-const { sendMail } = require("../helpers/createEmail");
+const { sendMailCotizacion, sendMailEstimacion } = require("../helpers/createEmail");
 
  
 const nuevoSMS = async (req = request, res = response) => {
@@ -30,7 +30,7 @@ const nuevoSMS = async (req = request, res = response) => {
 
 } 
 
-const nuevoEmail = async (req = request, res = response) => {
+const nuevoEmailCotizacion = async (req = request, res = response) => {
 
     const body = req.body;
 
@@ -38,7 +38,34 @@ const nuevoEmail = async (req = request, res = response) => {
 
     try {
 
-        sendMail(body).then((emailEnviado) => {
+        sendMailCotizacion(body).then((emailEnviado) => {
+            if (emailEnviado) {
+                // console.log(res)
+                res.status(200).json({
+                    ok: true,
+                    message: "correo enviado"
+                })
+            }
+        })
+
+    } catch (error) {
+        res.status(200).json({
+            ok: false,
+            message: "Error al enviar correo"
+        })
+    }
+
+}
+
+const nuevoEmailEstimacion = async (req = request, res = response) => {
+
+    const body = req.body;
+
+    // console.log(nom, courriel, telefono, sujec, message)
+
+    try {
+
+        sendMailEstimacion(body).then((emailEnviado) => {
             if (emailEnviado) {
                 // console.log(res)
                 res.status(200).json({
@@ -59,5 +86,6 @@ const nuevoEmail = async (req = request, res = response) => {
 
 module.exports = {
     nuevoSMS,
-    nuevoEmail
+    nuevoEmailCotizacion,
+    nuevoEmailEstimacion
 }
