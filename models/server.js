@@ -9,7 +9,8 @@ class Server{
         this.port = process.env.PORT;
 
         this.paths = {
-            mensajes: '/api/mensajes'
+            mensajes: '/api/mensajes',
+            archivos: '/api/archivos'
         }
 
         this.middlewares();
@@ -34,7 +35,8 @@ class Server{
 
 
     routes(){
-        this.app.use(this.paths.mensajes, require('../routes/mensajes.route'))
+        this.app.use(this.paths.mensajes, require('../routes/mensajes.route'));
+        this.app.use(this.paths.archivos, require('../routes/archivos.route'));
     }
 
     listen(){
