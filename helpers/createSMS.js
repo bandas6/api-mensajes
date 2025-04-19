@@ -15,7 +15,7 @@ const createSMS = async (body) => {
         const messageResp = await client.messages.create({
             body: messageToSend,
             to: '+1' + telefono,
-            from: '+13342768635',
+            from: '+13612395600',
         });
 
         console.log(messageResp.sid); // Imprime el SID del mensaje si se envía correctamente
